@@ -1,0 +1,17 @@
+# Git ignore patterns for Centralized Security System
+
+target/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+*.log
+
+# Never commit private keys
+src/main/resources/keys/private.pem
+*.pem
+!*.pem.example
+
+# Local overrides
+application-local.yml

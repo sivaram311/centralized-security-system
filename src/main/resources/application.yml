@@ -1,0 +1,41 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: centralized-security-system
+  datasource:
+    url: jdbc:h2:mem:css;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+css:
+  issuer: http://localhost:9000
+  cors:
+    allowed-origin-patterns: http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080,http://localhost:8081
+  jwt:
+    access-expiration-ms: 900000       # 15 minutes
+    refresh-expiration-days: 7
+  # RS256 key pair — generate production keys via scripts/generate-keys.sh
+  keys:
+    private-key-path: classpath:keys/private.pem
+    public-key-path: classpath:keys/public.pem
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.css.auth: INFO
