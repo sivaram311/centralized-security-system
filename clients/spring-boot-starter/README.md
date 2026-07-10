@@ -27,21 +27,22 @@ css:
     jwks-uri: http://localhost:9000/.well-known/jwks.json
     client-id: agent-portal
     jwks-cache-seconds: 3600
+    register-servlet-filter: false   # prefer SecurityFilterChain wiring
 ```
 
-When `enabled=true`, the starter registers `CssJwtAuthenticationFilter` which:
+When `enabled=true`, beans `CssJwtValidator` and `CssJwtAuthenticationFilter` are created.
 
 - Reads `Authorization: Bearer …`
 - Also accepts `?access_token=` on `/ws/**` and SSE-style paths
 - Verifies issuer, audience/`client_id`, and non-empty `roles`
 - Sets `SecurityContext` authorities from the `roles` claim
 
-Your app still owns `SecurityFilterChain` (`authorizeHttpRequests`). Add the filter before `UsernamePasswordAuthenticationFilter` if you prefer explicit ordering over the servlet registration bean.
+Your app still owns `SecurityFilterChain`. Set `register-servlet-filter=false` and `addFilterBefore(cssJwtAuthenticationFilter, …)`.
 
 ## Reference consumers
 
-- Agent Portal currently keeps an in-repo copy (`com.agentportal.security.CssJwtValidator`) and can migrate to this starter later.
-- Persistent Agent Platform / grok_dev can switch to the same dependency.
+- **Agent Portal** — depends on this starter (`css.resource-server.*`)
+- Persistent Agent Platform / grok_dev can switch to the same dependency
 
 ## Build
 

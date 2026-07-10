@@ -22,7 +22,16 @@ public class CssResourceServerAutoConfiguration {
         return new CssJwtAuthenticationFilter(validator);
     }
 
+    /**
+     * Opt-in servlet registration. Apps that add the filter via SecurityFilterChain
+     * should leave {@code css.resource-server.register-servlet-filter=false}.
+     */
     @Bean
+    @ConditionalOnProperty(
+            prefix = "css.resource-server",
+            name = "register-servlet-filter",
+            havingValue = "true"
+    )
     public FilterRegistrationBean<CssJwtAuthenticationFilter> cssJwtFilterRegistration(
             CssJwtAuthenticationFilter filter
     ) {
