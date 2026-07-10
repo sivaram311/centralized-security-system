@@ -32,6 +32,18 @@ cd centralized-security-system
 mvn spring-boot:run
 ```
 
+### Docker
+
+Multi-stage image builds the JAR then runs a JRE 21 container on **9000** with an H2 volume at `/data`:
+
+```bash
+cd centralized-security-system
+docker build -t css:local .
+docker run --rm -p 9000:9000 -v css-data:/data css:local
+```
+
+`Dockerfile` + `.dockerignore` are required for Agent Portal `docker compose` service `css`. Override datasource/CORS via env (see portal `docker-compose.yml` and [docs/application-integration.md](./docs/application-integration.md)).
+
 **Default users (dev seed):**
 
 | User | Password | Applications |
