@@ -36,8 +36,8 @@ mvn spring-boot:run
 
 | User | Password | Applications |
 |------|----------|--------------|
-| `admin` | `admin123` | grok-dev, agent-platform, erpnext-bridge |
-| `demo` | `demo123` | grok-dev only |
+| `admin` | `admin123` | grok-dev, agent-platform, agent-portal, erpnext-bridge |
+| `demo` | `demo123` | grok-dev, agent-portal |
 
 **Login example:**
 
@@ -61,6 +61,7 @@ GET http://localhost:9000/.well-known/jwks.json
 |----------|-------------|---------------|
 | `grok-dev` | Grok Dev (Angular + Spring Boot) | ROLE_USER, ROLE_ADMIN |
 | `agent-platform` | Persistent Agent Platform | ROLE_ADMIN |
+| `agent-portal` | Agent Portal (Cursor + Antigravity) | ROLE_USER, ROLE_ADMIN |
 | `erpnext-bridge` | ERPNext SSO bridge (future) | ROLE_SYSTEM_MANAGER |
 
 Each login request **must** include `clientId`. Tokens include `aud` (audience) and app-specific `roles`.

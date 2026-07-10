@@ -25,6 +25,7 @@ public class DataSeeder {
             RegisteredApplication grokDev = seedApp(appRepo, "grok-dev", "Grok Dev Trading Platform");
             RegisteredApplication agentPlatform = seedApp(appRepo, "agent-platform", "Persistent Agent Platform");
             RegisteredApplication erpnextBridge = seedApp(appRepo, "erpnext-bridge", "ERPNext SSO Bridge");
+            RegisteredApplication agentPortal = seedApp(appRepo, "agent-portal", "Agent Portal");
 
             if (userRepo.findByUsername("admin").isEmpty()) {
                 UserAccount admin = new UserAccount();
@@ -37,9 +38,14 @@ public class DataSeeder {
                 admin.getApplicationRoles().add(role(admin, grokDev, "ROLE_USER"));
                 admin.getApplicationRoles().add(role(admin, agentPlatform, "ROLE_ADMIN"));
                 admin.getApplicationRoles().add(role(admin, erpnextBridge, "ROLE_SYSTEM_MANAGER"));
+                admin.getApplicationRoles().add(role(admin, agentPortal, "ROLE_ADMIN"));
+                admin.getApplicationRoles().add(role(admin, agentPortal, "ROLE_USER"));
 
                 userRepo.save(admin);
                 log.info("Seeded admin user (admin / admin123) with roles across all applications");
+            } else {
+                ensureRole(userRepo, "admin", agentPortal, "ROLE_ADMIN");
+                ensureRole(userRepo, "admin", agentPortal, "ROLE_USER");
             }
 
             if (userRepo.findByUsername("demo").isEmpty()) {
@@ -49,10 +55,27 @@ public class DataSeeder {
                 demo.setPasswordHash(passwordEncoder.encode("demo123"));
                 demo.setEnabled(true);
                 demo.getApplicationRoles().add(role(demo, grokDev, "ROLE_USER"));
+                demo.getApplicationRoles().add(role(demo, agentPortal, "ROLE_USER"));
                 userRepo.save(demo);
-                log.info("Seeded demo user (demo / demo123) for grok-dev only");
+                log.info("Seeded demo user (demo / demo123) for grok-dev and agent-portal");
+            } else {
+                ensureRole(userRepo, "demo", agentPortal, "ROLE_USER");
             }
         };
+    }
+
+    private void ensureRole(UserAccountRepository userRepo, String username, RegisteredApplication app, String roleName) {
+        userRepo.findByUsername(username).ifPresent(user -> {
+            boolean exists = user.getApplicationRoles().stream()
+                    .anyMatch(r -> r.getApplication() != null
+                            && app.getClientId().equals(r.getApplication().getClientId())
+                            && roleName.equals(r.getRoleName()));
+            if (!exists) {
+                user.getApplicationRoles().add(role(user, app, roleName));
+                userRepo.save(user);
+                log.info("Granted {} on {} to {}", roleName, app.getClientId(), username);
+            }
+        });
     }
 
     private RegisteredApplication seedApp(RegisteredApplicationRepository repo, String clientId, String name) {

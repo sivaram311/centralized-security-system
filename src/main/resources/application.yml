@@ -21,7 +21,7 @@ spring:
 css:
   issuer: http://localhost:9000
   cors:
-    allowed-origin-patterns: http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080,http://localhost:8081
+    allowed-origin-patterns: http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080,http://localhost:8081,http://*:4200
   jwt:
     access-expiration-ms: 900000       # 15 minutes
     refresh-expiration-days: 7

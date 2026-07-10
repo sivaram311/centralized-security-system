@@ -48,7 +48,7 @@ Apps login → CSS (:9000) → JWT with aud=clientId → Apps validate via JWKS 
 | JWKS + introspect | ✅ |
 | Documentation | ✅ |
 | grok_dev integration | 📋 Documented, not wired |
-| agent-platform integration | 📋 Documented |
+| agent-platform integration | ✅ Phase 5 wired |
 | ERPNext bridge | 📋 Planned |
 | Spring Boot starter client | 📋 Planned |
 

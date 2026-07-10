@@ -9,7 +9,7 @@ How each application in the workspace connects to the Centralized Security Syste
 | Application | clientId | Status | Auth today |
 |-------------|----------|--------|------------|
 | [grok_dev](#1-grok_dev) | `grok-dev` | Documented, not wired | Embedded HS256 JWT |
-| [persistent-agent-platform](#2-persistent-agent-platform) | `agent-platform` | Documented, not wired | HTTP Basic (in-memory) |
+| [persistent-agent-platform](#2-persistent-agent-platform) | `agent-platform` | ✅ Phase 5 wired | CSS JWT (replaces HTTP Basic) |
 | [ERPNext](#3-erpnext) | `erpnext-bridge` | Planned | Frappe session/RBAC |
 
 ---
