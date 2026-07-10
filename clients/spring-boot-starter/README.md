@@ -1,16 +1,23 @@
-# CSS Spring Boot Starter (Planned)
+# CSS Spring Boot Starter
 
-Auto-configuration library for downstream Spring Boot applications to validate CSS-issued JWTs.
+Auto-configuration for Spring Boot 3 apps that validate CSS-issued RS256 JWTs via JWKS.
 
-## Target Usage
+## Install
+
+```powershell
+cd E:\MyWorkspace\centralized-security-system\clients\spring-boot-starter
+mvn -q install
+```
 
 ```xml
 <dependency>
-    <groupId>com.css</groupId>
-    <artifactId>css-spring-boot-starter</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+  <groupId>com.css</groupId>
+  <artifactId>css-spring-boot-starter</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
+
+## Configure
 
 ```yaml
 css:
@@ -18,21 +25,26 @@ css:
     enabled: true
     issuer: http://localhost:9000
     jwks-uri: http://localhost:9000/.well-known/jwks.json
-    client-id: grok-dev
+    client-id: agent-portal
+    jwks-cache-seconds: 3600
 ```
 
-## Planned Features
+When `enabled=true`, the starter registers `CssJwtAuthenticationFilter` which:
 
-- Auto-register `CssJwtAuthenticationFilter`
-- JWKS cache with configurable TTL
-- `aud` / `client_id` validation
-- Role claim → `GrantedAuthority` mapping
-- Optional SSE query-token support (grok_dev compatibility)
+- Reads `Authorization: Bearer …`
+- Also accepts `?access_token=` on `/ws/**` and SSE-style paths
+- Verifies issuer, audience/`client_id`, and non-empty `roles`
+- Sets `SecurityContext` authorities from the `roles` claim
 
-## Status
+Your app still owns `SecurityFilterChain` (`authorizeHttpRequests`). Add the filter before `UsernamePasswordAuthenticationFilter` if you prefer explicit ordering over the servlet registration bean.
 
-Not yet implemented — see [application-integration.md](../docs/application-integration.md) for manual integration steps.
+## Reference consumers
 
-Reference implementation to copy from:
-- `grok_dev/backend/.../security/JwtAuthenticationFilter.java`
-- `centralized-security-system/.../security/JwtAuthenticationFilter.java`
+- Agent Portal currently keeps an in-repo copy (`com.agentportal.security.CssJwtValidator`) and can migrate to this starter later.
+- Persistent Agent Platform / grok_dev can switch to the same dependency.
+
+## Build
+
+```powershell
+mvn -q -DskipTests package
+```

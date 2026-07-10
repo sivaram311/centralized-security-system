@@ -7,7 +7,7 @@
 | **Port** | 9000 |
 | **Stack** | Spring Boot 3.3, Spring Security, JPA, RS256 JWT |
 | **Reference implementation** | [grok_dev backend security](../../Source/grok_dev/docs/security-jwt.md) |
-| **Status** | v0.1 — auth server + integration docs |
+| **Status** | v0.1 — auth server + resource-server starter + integration docs |
 
 ---
 
@@ -92,7 +92,7 @@ centralized-security-system/
 │   ├── security/        JwtKeyProvider, JwtTokenService, JwtAuthenticationFilter
 │   └── service/         AuthenticationService, RefreshTokenService
 ├── docs/                Integration and architecture documentation
-└── clients/             Future Spring Boot starter for resource servers
+└── clients/spring-boot-starter/   css-spring-boot-starter (JWKS resource server)
 ```
 
 ---
@@ -119,4 +119,4 @@ See [grok-dev-reference.md](./docs/grok-dev-reference.md) for a field-by-field c
 1. Integrate **grok_dev** backend as OAuth resource server (validate CSS JWT)
 2. Replace **persistent-agent-platform** HTTP Basic with CSS JWT filter
 3. Build **erpnext-bridge** (Frappe OAuth/OIDC or custom token exchange)
-4. Publish `css-spring-boot-starter` client library in `clients/`
+4. Publish `css-spring-boot-starter` from `clients/spring-boot-starter` (implemented; install locally with `mvn install`)
