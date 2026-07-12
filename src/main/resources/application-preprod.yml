@@ -1,0 +1,45 @@
+# PREPROD profile — Centralized Security System
+# Activate: --spring.profiles.active=preprod
+
+server:
+  port: ${CSS_PORT:4900}
+
+spring:
+  datasource:
+    url: ${CSS_JDBC_URL:jdbc:postgresql://127.0.0.1:5432/app_css?currentSchema=preprod}
+    driver-class-name: org.postgresql.Driver
+    username: ${CSS_DB_USER:app_css_preprod}
+    password: ${CSS_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: preprod
+  h2:
+    console:
+      enabled: false
+
+css:
+  issuer: ${CSS_ISSUER:http://127.0.0.1:4900}
+  cors:
+    # Include AgentVerse DEV/PREPROD + public IP; override with CSS_CORS_ORIGINS=* to fully open
+    allowed-origin-patterns: ${CSS_CORS_ORIGINS:http://127.0.0.1:*,http://localhost:*,http://103.118.183.185:*,https://*-staging.delena.buzz,https://css-staging.delena.buzz,https://*.delena.buzz}
+  seed:
+    enabled: ${CSS_SEED_ENABLED:true}
+    admin-password: ${CSS_ADMIN_PASSWORD:admin123}
+    demo-password: ${CSS_DEMO_PASSWORD:demo123}
+  keys:
+    private-key-path: ${CSS_PRIVATE_KEY:file:F:/apps/css/keys/private.pem}
+    public-key-path: ${CSS_PUBLIC_KEY:file:F:/apps/css/keys/public.pem}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.css.auth: INFO
