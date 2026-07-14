@@ -21,7 +21,7 @@
 
 **Wave rule:** DEV `:3xxx` only. No F/G issuer flip. No classic↔next merge. Matrix after promote only.
 
-Inventory note: safer minimal wave is **ProdDeck-only** first; Portal/AV stay classic until pilot boring. Confirm which list on EM GO.
+**EM GO (2026-07-15):** proceed with **ProdDeck-only** css-next OAuth DEV pilot (inventory safer cut). Portal / AgentVerse deferred.
 
 ## 2. OUT OF WAVE
 

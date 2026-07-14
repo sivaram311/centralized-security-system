@@ -1,6 +1,6 @@
 # ProdDeck DEV ↔ css-next OAuth — Integration Spec
 
-**Status:** Spec only (not implemented)  
+**Status:** Implemented on ProdDeck `feature/css-next-oauth-pilot` (DEV `.env.local` oauth flag) — F/G unchanged  
 **Audience:** App implementers (ProdDeck), CSS maintainers, EM/QA  
 **Date:** 2026-07-15  
 **Goal:** Pilot **ProdDeck DEV** (`:3320`) against **css-next** OAuth SSO without touching classic CSS or F/G ProdDeck bakes until the pilot is green.
