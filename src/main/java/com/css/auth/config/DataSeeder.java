@@ -7,6 +7,8 @@ import com.css.auth.repository.RegisteredApplicationRepository;
 import com.css.auth.repository.UserAccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,14 @@ public class DataSeeder {
 
     private static final Logger log = LoggerFactory.getLogger(DataSeeder.class);
 
+    @Value("${css.seed.admin-password:admin123}")
+    private String adminPassword;
+
+    @Value("${css.seed.demo-password:demo123}")
+    private String demoPassword;
+
     @Bean
+    @ConditionalOnProperty(name = "css.seed.enabled", havingValue = "true", matchIfMissing = true)
     CommandLineRunner seed(UserAccountRepository userRepo,
                            RegisteredApplicationRepository appRepo,
                            PasswordEncoder passwordEncoder) {
@@ -31,7 +40,7 @@ public class DataSeeder {
                 UserAccount admin = new UserAccount();
                 admin.setUsername("admin");
                 admin.setEmail("admin@css.local");
-                admin.setPasswordHash(passwordEncoder.encode("admin123"));
+                admin.setPasswordHash(passwordEncoder.encode(adminPassword));
                 admin.setEnabled(true);
 
                 admin.getApplicationRoles().add(role(admin, grokDev, "ROLE_ADMIN"));
@@ -42,7 +51,7 @@ public class DataSeeder {
                 admin.getApplicationRoles().add(role(admin, agentPortal, "ROLE_USER"));
 
                 userRepo.save(admin);
-                log.info("Seeded admin user (admin / admin123) with roles across all applications");
+                log.info("Seeded admin user with roles across all applications (password from css.seed.admin-password)");
             } else {
                 ensureRole(userRepo, "admin", agentPortal, "ROLE_ADMIN");
                 ensureRole(userRepo, "admin", agentPortal, "ROLE_USER");
@@ -52,12 +61,12 @@ public class DataSeeder {
                 UserAccount demo = new UserAccount();
                 demo.setUsername("demo");
                 demo.setEmail("demo@css.local");
-                demo.setPasswordHash(passwordEncoder.encode("demo123"));
+                demo.setPasswordHash(passwordEncoder.encode(demoPassword));
                 demo.setEnabled(true);
                 demo.getApplicationRoles().add(role(demo, grokDev, "ROLE_USER"));
                 demo.getApplicationRoles().add(role(demo, agentPortal, "ROLE_USER"));
                 userRepo.save(demo);
-                log.info("Seeded demo user (demo / demo123) for grok-dev and agent-portal");
+                log.info("Seeded demo user for grok-dev and agent-portal (password from css.seed.demo-password)");
             } else {
                 ensureRole(userRepo, "demo", agentPortal, "ROLE_USER");
             }

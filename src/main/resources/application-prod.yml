@@ -1,0 +1,44 @@
+# PROD profile — Centralized Security System
+# Activate: --spring.profiles.active=prod
+
+server:
+  port: ${CSS_PORT:5900}
+
+spring:
+  datasource:
+    url: ${CSS_JDBC_URL:jdbc:postgresql://127.0.0.1:5432/app_css?currentSchema=prod}
+    driver-class-name: org.postgresql.Driver
+    username: ${CSS_DB_USER:app_css_prod}
+    password: ${CSS_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: prod
+  h2:
+    console:
+      enabled: false
+
+css:
+  issuer: ${CSS_ISSUER:https://css.delena.buzz}
+  cors:
+    allowed-origin-patterns: ${CSS_CORS_ORIGINS:https://css.delena.buzz,https://*.delena.buzz,http://127.0.0.1:*,http://localhost:*}
+  seed:
+    enabled: ${CSS_SEED_ENABLED:true}
+    admin-password: ${CSS_ADMIN_PASSWORD:changeme-set-via-env}
+    demo-password: ${CSS_DEMO_PASSWORD:changeme-set-via-env}
+  keys:
+    private-key-path: ${CSS_PRIVATE_KEY:file:G:/apps/css/keys/private.pem}
+    public-key-path: ${CSS_PUBLIC_KEY:file:G:/apps/css/keys/public.pem}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.css.auth: INFO
