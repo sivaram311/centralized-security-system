@@ -13,7 +13,7 @@
 | [security-model.md](./security-model.md) | Security, compliance | Threat model and hardening |
 | [sso-and-test-roadmap.md](./sso-and-test-roadmap.md) | EM, security, app teams | Test gaps, one-login SSO intent, phased roadmap |
 | [adr/001-sso-mechanism.md](./adr/001-sso-mechanism.md) | EM, architects | Phase 0 decision — OIDC Authorization Code + PKCE for browser SSO |
-| [proddeck-css-next-oauth-pilot.md](./proddeck-css-next-oauth-pilot.md) | ProdDeck + CSS integrators | **Spec only** — wire ProdDeck DEV `:3320` to css-next OAuth (contracts, env, checklist) |
+| [proddeck-css-next-oauth-pilot.md](./proddeck-css-next-oauth-pilot.md) | ProdDeck + CSS integrators | **Implemented** — ProdDeck DEV oauth flag (`feature/css-next-oauth-pilot`); F/G classic unchanged |
 | [css-api-prove-working.md](./css-api-prove-working.md) | EM, integrators | **Proven** JWKS/OAuth API sheet (2026-07-15) — GO for consumer wiring |
 | [css-consumer-migrate-wave.md](./css-consumer-migrate-wave.md) | EM, Crew Lead | Consumer migrate wave IN/OUT list (stop for GO before Phase 3) |
 

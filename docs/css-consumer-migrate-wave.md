@@ -40,6 +40,6 @@
 3. PROD `admin`/`admin123` → 401 expected (env seed)
 4. Accidental classic↔next mix on F/G
 
-## 4. Stop for EM GO
+## 4. EM GO (locked)
 
-**Confirm this wave list (ProdDeck → Portal → AgentVerse on css-next DEV, or ProdDeck-only pilot) before Phase 3 consumer coding.**
+**ProdDeck-only** css-next OAuth DEV pilot — Portal / AgentVerse deferred until pilot is boring.
