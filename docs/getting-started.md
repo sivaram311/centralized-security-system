@@ -63,6 +63,23 @@ curl -s -X POST http://localhost:9000/auth/refresh \
 | `agent-platform` | Persistent Agent Platform |
 | `erpnext-bridge` | ERPNext SSO bridge (planned) |
 
+## Running tests
+
+From the repo root (main Spring Boot module):
+
+```bash
+mvn test
+```
+
+For the Spring Boot starter client library:
+
+```bash
+cd clients/spring-boot-starter
+mvn test
+```
+
+Phase 1 auth/JWKS/starter coverage is being added on `feature/css-next`; run the commands above after pulling latest. Full green suite validation is a Lead gate before promote — see [sso-and-test-roadmap.md](./sso-and-test-roadmap.md).
+
 ## Configuration
 
 Edit `src/main/resources/application.yml`:

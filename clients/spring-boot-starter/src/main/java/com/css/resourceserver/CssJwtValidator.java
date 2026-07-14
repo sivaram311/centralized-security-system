@@ -37,6 +37,17 @@ public class CssJwtValidator {
         this.properties = properties;
     }
 
+    /**
+     * Seeds the public-key cache directly, bypassing the JWKS HTTP fetch.
+     * Package-private and intended for unit tests only; production code paths
+     * are unaffected since this is never invoked outside the test sources.
+     */
+    void primeKeyCacheForTests(PublicKey publicKey, String kid, Instant expiresAt) {
+        this.cachedPublicKey = publicKey;
+        this.cachedKid = kid;
+        this.cacheExpiresAt = expiresAt;
+    }
+
     public boolean isEnabled() {
         return properties.isEnabled();
     }

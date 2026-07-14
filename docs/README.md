@@ -12,6 +12,7 @@
 | [migration-guide.md](./migration-guide.md) | DevOps, leads | Phased rollout plan |
 | [security-model.md](./security-model.md) | Security, compliance | Threat model and hardening |
 | [sso-and-test-roadmap.md](./sso-and-test-roadmap.md) | EM, security, app teams | Test gaps, one-login SSO intent, phased roadmap |
+| [adr/001-sso-mechanism.md](./adr/001-sso-mechanism.md) | EM, architects | Phase 0 decision — OIDC Authorization Code + PKCE for browser SSO |
 
 ## Related Workspace Documentation
 

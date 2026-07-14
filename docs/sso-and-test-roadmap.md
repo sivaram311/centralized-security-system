@@ -1,6 +1,6 @@
 # CSS — Test coverage, SSO checklist & roadmap
 
-**Status:** planning (ask → now documented)  
+**Status:** Phase 0 **accepted**; Phase 1 **done** (Lead validated `mvn test` green — main + starter)  
 **Branch:** `feature/css-next` (from prod tag `v0.1.0`)  
 **Audience:** EM, security, app teams  
 **Machine SoT for live pins:** `E:\MyAgent\workflow\deps\DEPENDENCY-MATRIX.md`
@@ -13,10 +13,10 @@ This note captures the current-state checklist, product intent (one login for al
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Unit / API tests for login | **No** | Only `CentralizedSecurityApplicationTests.contextLoads()` |
-| Tests for refresh / logout / introspect | **No** | None |
-| Tests for JWT claims (`aud`, roles, expiry) | **No** | None |
-| Tests for JWKS / `css-spring-boot-starter` | **No** | None |
+| Unit / API tests for login | **Yes** | `AuthApiIT` on `feature/css-next` |
+| Tests for refresh / logout / introspect | **Yes** | refresh + logout revoke in `AuthApiIT` |
+| Tests for JWT claims (`aud`, roles, expiry) | **Yes** | `JwtClaimsAndJwksIT` |
+| Tests for JWKS / `css-spring-boot-starter` | **Yes** | JWKS IT + `CssJwtValidatorTest` |
 | One identity store (one password hash) | **Yes** | CSS holds users; apps must not invent IdPs |
 | Same credentials across apps | **Yes** | Not a different password per app |
 | True SSO (login once → open other apps without re-typing password) | **No** | Each app UI posts `username + password + clientId` again |
@@ -26,7 +26,7 @@ This note captures the current-state checklist, product intent (one login for al
 | Cross-app RBAC maturity | **Partial** | Roles exist per `clientId`; richer RBAC later is OK |
 | Dependency / version tracking for CSS | **Yes** | CONSCIOUS #13 + `workflow/deps/` |
 
-**Test verdict:** `v0.1.0` does **not** include real unit/integration tests for auth behavior — only a Spring context smoke test.
+**Test verdict:** Phase 1 on `feature/css-next` adds real auth/JWKS/starter tests (Lead-validated). Prod tag `v0.1.0` predates these tests — consumers pin CSS release separately via `workflow/deps/`.
 
 ---
 
@@ -69,7 +69,7 @@ Any app (or App Home)
 
 | Topic | Options / note |
 |-------|----------------|
-| Browser SSO mechanism | Shared cookie on `*.delena.buzz` **or** OIDC Authorization Code + PKCE redirect |
+| Browser SSO mechanism | **Decided:** OIDC Authorization Code + PKCE — see [ADR 001](./adr/001-sso-mechanism.md) |
 | Token for each app | Silent exchange / “switch client” after SSO **or** redirect with auth code |
 | Logout | Logout-one-app vs logout-everywhere |
 | CSRF / cookie domain | Must be explicit if using cookies across subdomains |
@@ -81,30 +81,32 @@ Any app (or App Home)
 
 Phases are sequential unless noted. Each phase ends with docs + tests green before the next promote.
 
-### Phase 0 — Baseline & contracts (docs / no behavior change)
+### Phase 0 — Baseline & contracts (docs / no behavior change) ✅ accepted
 
-| Deliverable | Done when |
-|-------------|-----------|
-| This roadmap published in CSS docs | Linked from `docs/README.md` |
-| Confirm prod tag `v0.1.0` is SoT for consumers | Matrix already pins CSS `v0.1.0` |
-| Decide SSO mechanism (cookie vs OIDC+PKCE) | Written decision in this doc or ADR |
+| Deliverable | Done when | Status |
+|-------------|-----------|--------|
+| This roadmap published in CSS docs | Linked from `docs/README.md` | ✅ |
+| Confirm prod tag `v0.1.0` is SoT for consumers | Matrix already pins CSS `v0.1.0` | ✅ |
+| Decide SSO mechanism (cookie vs OIDC+PKCE) | Written decision in ADR | ✅ [ADR 001 — OIDC Auth Code + PKCE](./adr/001-sso-mechanism.md) |
 
-**Exit:** Mechanism chosen; no prod cutover required.
+**Exit:** Mechanism chosen; no prod cutover required. **Complete.**
 
 ---
 
-### Phase 1 — Test foundation (build trust before SSO)
+### Phase 1 — Test foundation (build trust before SSO) ✅ done
 
-| Deliverable | Done when |
-|-------------|-----------|
-| Login success / bad password / unknown `clientId` | API or `@SpringBootTest` + MockMvc/WebTestClient |
-| Refresh success / revoked refresh | Covered |
-| Logout revokes refresh for `user × clientId` | Covered |
-| JWT claims: `iss`, `aud`, `exp`, roles for `clientId` | Covered |
-| JWKS serves key used to verify issued tokens | Covered |
-| Starter: reject bad/expired/wrong-aud token | Covered (unit or light IT) |
+Parallel crew on `feature/css-next` (2026-07-15): lanes A–D. Lead validated both modules green. See `agents/crew-activity.md`.
 
-**Exit:** `mvn test` green on `feature/css-next`; promote only after tests land (even if SSO not done).
+| Deliverable | Done when | Status |
+|-------------|-----------|--------|
+| Login success / bad password / unknown `clientId` | `AuthApiIT` | ✅ |
+| Refresh success / revoked refresh | `AuthApiIT` | ✅ |
+| Logout revokes refresh for `user × clientId` | `AuthApiIT` | ✅ |
+| JWT claims: `iss`, `aud`, `exp`, roles for `clientId` | `JwtClaimsAndJwksIT` | ✅ |
+| JWKS serves key used to verify issued tokens | `JwtClaimsAndJwksIT` | ✅ |
+| Starter: reject bad/expired/wrong-aud token | `CssJwtValidatorTest` (5 cases) | ✅ |
+
+**Exit met:** `mvn test` green (main: context + AuthApiIT + JwtClaimsAndJwksIT; starter: 5/5). Ready for Phase 2 design/coding after separate approval — still **no F:/G: deploy** from this slice.
 
 ---
 
@@ -185,6 +187,7 @@ Promote rule: each shippable slice gets its own semver / tag when ready for Q1/Q
 
 | Doc | Why |
 |-----|-----|
+| [adr/001-sso-mechanism.md](./adr/001-sso-mechanism.md) | Phase 0 decision — OIDC Auth Code + PKCE |
 | [security-model.md](./security-model.md) | Threat model, TODOs (rate limit, MFA) |
 | [application-integration.md](./application-integration.md) | How apps plug in today |
 | [api-reference.md](./api-reference.md) | `/auth/login`, refresh, JWKS |
