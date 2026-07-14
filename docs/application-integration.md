@@ -232,6 +232,20 @@ All apps must update `css.issuer` and JWKS URL when promoting environments.
 
 ---
 
+## ProdDeck (DEV OAuth pilot — spec)
+
+| Item | Value |
+|------|-------|
+| Tree | `E:\wt\proddeck-integrate` (`:3320`) |
+| clientId | `proddeck` |
+| Target IdP | **css-next** (`https://css-next.delena.buzz`) — not classic `css.delena.buzz` |
+| Status | **Spec only** — do not implement until EM directs |
+
+Full contracts, env, proxy rules, and acceptance checklist:  
+**[proddeck-css-next-oauth-pilot.md](./proddeck-css-next-oauth-pilot.md)**
+
+---
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |

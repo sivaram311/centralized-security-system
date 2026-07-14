@@ -13,6 +13,7 @@
 | [security-model.md](./security-model.md) | Security, compliance | Threat model and hardening |
 | [sso-and-test-roadmap.md](./sso-and-test-roadmap.md) | EM, security, app teams | Test gaps, one-login SSO intent, phased roadmap |
 | [adr/001-sso-mechanism.md](./adr/001-sso-mechanism.md) | EM, architects | Phase 0 decision — OIDC Authorization Code + PKCE for browser SSO |
+| [proddeck-css-next-oauth-pilot.md](./proddeck-css-next-oauth-pilot.md) | ProdDeck + CSS integrators | **Spec only** — wire ProdDeck DEV `:3320` to css-next OAuth (contracts, env, checklist) |
 
 ## Related Workspace Documentation
 
