@@ -102,7 +102,7 @@ Parallel crew on `feature/css-next` (2026-07-15): lanes A–D. Lead validated bo
 | JWKS serves key used to verify issued tokens | `JwtClaimsAndJwksIT` | ✅ |
 | Starter: reject bad/expired/wrong-aud token | `CssJwtValidatorTest` (5 cases) | ✅ |
 
-**Exit met:** `mvn test` green (main: context + AuthApiIT + JwtClaimsAndJwksIT; starter: 5/5). Ready for Phase 2 design/coding after separate approval — still **no F:/G: deploy** from this slice.
+**Exit met:** `mvn test` green (main: context + AuthApiIT + JwtClaimsAndJwksIT; starter: 5/5). Phase 2 SSO landed on the same branch; consumer app gates + promote remain separate — still **no F:/G: deploy** from this slice alone.
 
 ---
 
