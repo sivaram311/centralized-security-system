@@ -40,6 +40,15 @@
 3. PROD `admin`/`admin123` → 401 expected (env seed)
 4. Accidental classic↔next mix on F/G
 
-## 4. EM GO (locked)
+## 5. PENDING tracker (machine SoT)
 
-**ProdDeck-only** css-next OAuth DEV pilot — Portal / AgentVerse deferred until pilot is boring.
+Keep status in MyAgent: [`E:\MyAgent\workflow\css\MIGRATE-PENDING.md`](E:/MyAgent/workflow/css/MIGRATE-PENDING.md)
+
+| ID | Pending |
+|----|---------|
+| `mig-portal` | Agent Portal DEV → css-next |
+| `mig-av` | AgentVerse DEV → css-next (after Portal) |
+| `mig-css-dev9000` | CSS DEV `:9000` Postgres |
+| `mig-pd-merge-tag` | ProdDeck merge + tag/pack |
+| `mig-phase6` | F/G cutover + matrix (EM GO) |
+| `mig-idp-brand` | Optional branded css-next login page |
