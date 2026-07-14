@@ -38,9 +38,47 @@ Authenticate user for a specific registered application.
 ```
 
 **Notes:**
-- `clientId` must match a registered application (`grok-dev`, `agent-platform`, `erpnext-bridge`)
+- `clientId` must match a registered application (`grok-dev`, `agent-platform`, `erpnext-bridge`, `agent-portal`)
 - User must have at least one role for the requested application
 - Replaces grok_dev `POST /api/auth/login` (adds `clientId`)
+- Prefer **OAuth SSO** (`/oauth/*`) for browser apps — see below
+
+---
+
+## OAuth SSO (Phase 2 — Authorization Code + PKCE)
+
+One CSS login; apps exchange a short-lived `code` for **app-scoped** tokens. SSO cookie `CSS_SSO` avoids re-typing the password for the next app.
+
+### GET `/oauth/authorize`
+
+Query: `response_type=code&client_id=&redirect_uri=&code_challenge=&code_challenge_method=S256&state=`
+
+- No SSO session → **302** to `/oauth/login?...`
+- Valid SSO session → **302** to `redirect_uri?code=&state=`
+
+### GET|POST `/oauth/login`
+
+HTML form (GET) / credential submit (POST). On success sets SSO cookie and redirects with `code`.
+
+### POST `/oauth/token`
+
+```json
+{
+  "grant_type": "authorization_code",
+  "code": "...",
+  "redirect_uri": "http://127.0.0.1:8080/callback",
+  "client_id": "agent-portal",
+  "code_verifier": "..."
+}
+```
+
+**Response 200:** same shape as `/auth/login` (`accessToken`, `refreshToken`, `roles`, …).
+
+### POST `/oauth/logout`
+
+Revokes SSO session cookie.
+
+ADR: [adr/001-sso-mechanism.md](./adr/001-sso-mechanism.md)
 
 ---
 

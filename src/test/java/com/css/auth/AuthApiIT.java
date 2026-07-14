@@ -19,12 +19,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * Integration coverage for the Auth API (login/refresh/logout) against the
  * H2 in-memory database and seeded default accounts (admin/admin123, demo/demo123).
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class AuthApiIT {
 
     private static final String CLIENT_ID = "agent-portal";

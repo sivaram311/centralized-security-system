@@ -29,6 +29,8 @@ css:
     enabled: ${CSS_SEED_ENABLED:true}
     admin-password: ${CSS_ADMIN_PASSWORD:changeme-set-via-env}
     demo-password: ${CSS_DEMO_PASSWORD:changeme-set-via-env}
+  oauth:
+    cookie-secure: ${CSS_SSO_COOKIE_SECURE:true}
   keys:
     private-key-path: ${CSS_PRIVATE_KEY:file:G:/apps/css/keys/private.pem}
     public-key-path: ${CSS_PUBLIC_KEY:file:G:/apps/css/keys/public.pem}

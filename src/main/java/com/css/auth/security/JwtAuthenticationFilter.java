@@ -31,7 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.startsWith("/auth/refresh")
                 || path.startsWith("/.well-known/")
                 || path.startsWith("/actuator/health")
-                || path.startsWith("/h2-console");
+                || path.startsWith("/h2-console")
+                || path.startsWith("/oauth/");
     }
 
     @Override

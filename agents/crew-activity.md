@@ -1,35 +1,32 @@
 # Crew Activity — Centralized Security System
 
-## 2026-07-15 — Phase 0 + Phase 1 (SSO decision + test foundation)
+## 2026-07-15 — Phase 0 + 1 + 2 + DEV Postgres align
 
-- **Session:** `css-sso-phase1-2026-07-15`
+- **Session:** `css-sso-phase1-2026-07-15` / Phase 2 continue
 - **Branch:** `feature/css-next` (from prod tag `v0.1.0`)
-- **Lead:** Cursor (parent)
-- **Scope:** Phase 0 ADR + Phase 1 tests only — **no deploy**, no Phase 2 SSO code
-- **Result:** Phase 0 accepted; Phase 1 **done** — Lead `mvn test` green (main + starter)
+- **Lead:** Cursor
+- **Result:** Phase 0–2 server work done; DEV→Postgres; `mvn test` 19 green; no F/G deploy
 
-| Timestamp (IST) | Lane | Role | Action | Result |
-|-----------------|------|------|--------|--------|
-| 2026-07-15 ~01:46 | Lead | Release | Checkout `feature/css-next` from `v0.1.0`; push branches/tags | ok |
-| 2026-07-15 ~01:59 | Lead | Docs | Publish `docs/sso-and-test-roadmap.md` + index in `docs/README.md` | ok |
-| 2026-07-15 ~02:00 | Lead | Plan | `agents/ACTION-PLAN-phase0-1.md`, `crew-manifest.md`, `pre-work/approval.md` | ok |
-| 2026-07-15 ~02:05 | Lead | Phase 0 | Accept ADR 001 — OIDC Authorization Code + PKCE | accepted |
-| 2026-07-15 ~02:10 | A | QA Auth API | `AuthApiIT` — 6 cases login/refresh/logout | ok |
-| 2026-07-15 ~02:10 | B | QA JWT/JWKS | `JwtClaimsAndJwksIT` — 6 cases JWKS + claims | ok |
-| 2026-07-15 ~02:10 | C | QA Starter | `CssJwtValidatorTest` — 5 cases + test seam | ok |
-| 2026-07-15 ~02:19 | D | Docs Keeper | Roadmap / getting-started / ADR index / vision | ok |
-| 2026-07-15 ~02:24 | Lead | Validate | `mvn test` main + starter both green; commit/push | ok |
+| Timestamp (IST) | Lane | Action | Result |
+|-----------------|------|--------|--------|
+| ~02:00 | Lead | Phase 0/1 plan + ADR + tests crew | ok → `cb5e14c` |
+| ~02:26 | User | Proceed Phase 2 + align DEV Postgres | GO |
+| ~02:30 | Lead | `application-dev.yml`, `application-test.yml`, `start-dev.ps1` | ok |
+| ~02:35 | SSO agent | OAuth authorize/login/token + PKCE + `OAuthAuthorizeIT` | ok |
+| ~02:39 | Lead | Validate `mvn test` (19) + docs (integration, getting-started, api-ref, registry) | ok |
 
-### Lane summary
+### Test totals
 
-| Lane | Owner | Deliverable | Tests |
-|------|-------|-------------|-------|
-| A | subagent A | `AuthApiIT` | 6 |
-| B | subagent B | `JwtClaimsAndJwksIT` | 6 |
-| C | subagent C | `CssJwtValidatorTest` | 5 |
-| D | subagent D | Docs sync | — |
+| Class | Count |
+|-------|-------|
+| AuthApiIT | 6 |
+| JwtClaimsAndJwksIT | 6 |
+| OAuthAuthorizeIT | 6 |
+| CentralizedSecurityApplicationTests | 1 |
+| CssJwtValidatorTest (starter) | 5 |
 
-### Blockers / notes
+### Deferred
 
-- Phase 2 SSO redirect/login UI remains blocked until separate approval.
-- Do not deploy F:/G: from this slice.
+- Wire Portal / ProdDeck / AgentVerse UIs to `/oauth/*` (consumer repos)
+- Q1/Q2 promote of CSS beyond `v0.1.0`
+- Restart live DEV :9000 onto Postgres (ops; secrets via start-dev.ps1)

@@ -4,10 +4,11 @@
 
 | Property | Value |
 |----------|-------|
-| **Port** | 9000 |
-| **Stack** | Spring Boot 3.3, Spring Security, JPA, RS256 JWT |
+| **Port** | 9000 (DEV) · 4900 (PREPROD) · 5900 (PROD) |
+| **Stack** | Spring Boot 3.3, Spring Security, JPA, RS256 JWT, Postgres (all envs) |
 | **Reference implementation** | [grok_dev backend security](../../Source/grok_dev/docs/security-jwt.md) |
-| **Status** | v0.1 — auth server + resource-server starter + integration docs |
+| **Status** | `feature/css-next` — Phase 1 tests + Phase 2 OAuth SSO; prod tag `v0.1.0` |
+| **Production tag** | `v0.1.0` — https://css.delena.buzz (`G:\apps\css` :5900) |
 
 ---
 
@@ -25,16 +26,19 @@ Today each application manages its own authentication:
 
 ---
 
-## Quick Start
+## Quick Start (DEV = Postgres)
 
-```bash
+```powershell
 cd centralized-security-system
-mvn spring-boot:run
+.\scripts\start-dev.ps1
 ```
+
+Uses profile **`dev`** → Postgres `app_css.dev` on **:9000** (same pattern as PREPROD/PROD).  
+See [docs/getting-started.md](./docs/getting-started.md).
 
 ### Docker
 
-Multi-stage image builds the JAR then runs a JRE 21 container on **9000** with an H2 volume at `/data`:
+Multi-stage image builds the JAR then runs a JRE 21 container on **9000** with an H2 volume at `/data` (image default is H2; machine DEV should use Postgres profile):
 
 ```bash
 cd centralized-security-system

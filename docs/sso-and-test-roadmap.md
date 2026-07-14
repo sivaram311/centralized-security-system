@@ -1,6 +1,6 @@
 # CSS — Test coverage, SSO checklist & roadmap
 
-**Status:** Phase 0 **accepted**; Phase 1 **done** (Lead validated `mvn test` green — main + starter)  
+**Status:** Phase 0 **accepted**; Phase 1 **done**; Phase 2 **done** (OAuth authorize/login/token + PKCE; Lead tests green). DEV Postgres aligned with PREPROD/PROD.  
 **Branch:** `feature/css-next` (from prod tag `v0.1.0`)  
 **Audience:** EM, security, app teams  
 **Machine SoT for live pins:** `E:\MyAgent\workflow\deps\DEPENDENCY-MATRIX.md`
@@ -19,9 +19,9 @@ This note captures the current-state checklist, product intent (one login for al
 | Tests for JWKS / `css-spring-boot-starter` | **Yes** | JWKS IT + `CssJwtValidatorTest` |
 | One identity store (one password hash) | **Yes** | CSS holds users; apps must not invent IdPs |
 | Same credentials across apps | **Yes** | Not a different password per app |
-| True SSO (login once → open other apps without re-typing password) | **No** | Each app UI posts `username + password + clientId` again |
-| App-scoped tokens | **Yes** | Login binds JWT/refresh to `clientId` / `aud` |
-| Per-app login screens | **Yes (today)** | Portal, ProdDeck, AgentVerse each show their own form |
+| True SSO (login once → open other apps without re-typing password) | **Yes (Phase 2)** | `/oauth/authorize` + SSO cookie `CSS_SSO` + PKCE token exchange |
+| App-scoped tokens | **Yes** | Login / token exchange binds JWT/refresh to `clientId` / `aud` |
+| Per-app login screens | **Migrate to gates** | Prefer redirect to CSS `/oauth/login`; `/auth/login` remains for API clients |
 | Shared CSS login / App Home as hub | **Partial / planned** | See `agent-portal/docs/platform/CSS-APP-HOME.md` |
 | Cross-app RBAC maturity | **Partial** | Roles exist per `clientId`; richer RBAC later is OK |
 | Dependency / version tracking for CSS | **Yes** | CONSCIOUS #13 + `workflow/deps/` |
@@ -38,15 +38,11 @@ This note captures the current-state checklist, product intent (one login for al
 - Apps authenticate *through* CSS (`POST /auth/login` + JWKS validation).
 - Tokens are **app-scoped** (`aud` / `clientId`) — good for isolation.
 
-### What feels wrong today
+### What changed in Phase 2
 
-- Each app’s login screen collects **username + password again**.
-- That is a **UX/session gap**, not separate credentials.
-- Pattern today:
-
-```text
-App UI  →  POST /auth/login { user, password, clientId }  →  app-scoped JWT
-```
+- Browser SSO: `/oauth/authorize` → `/oauth/login` → `code` → `/oauth/token` (PKCE).
+- Legacy `POST /auth/login` remains for API / scripts.
+- Apps should become **redirect gates**, not password collectors.
 
 ### North star
 
@@ -110,17 +106,18 @@ Parallel crew on `feature/css-next` (2026-07-15): lanes A–D. Lead validated bo
 
 ---
 
-### Phase 2 — One login UX (SSO session)
+### Phase 2 — One login UX (SSO session) ✅ done (server)
 
-| Deliverable | Done when |
-|-------------|-----------|
-| Canonical CSS login page (or hosted login UI) | User enters password **once** |
-| Apps redirect unauthenticated users to CSS login with `clientId` + `returnUrl` | No password field required on app (gate only) |
-| After login: return to app with usable session/token for that `clientId` | App APIs accept Bearer JWT |
-| Second app open: no password re-prompt while SSO session valid | Verified manually + automated smoke |
-| Document integration for Portal / ProdDeck / AgentVerse | Update `workflow/css/integration.md` + app OPS |
+| Deliverable | Done when | Status |
+|-------------|-----------|--------|
+| Canonical CSS login page | `/oauth/login` HTML | ✅ |
+| Apps redirect via authorize + PKCE | `GET /oauth/authorize` | ✅ |
+| Token exchange → app-scoped JWT | `POST /oauth/token` | ✅ |
+| Second app without password | SSO cookie `CSS_SSO` + `OAuthAuthorizeIT` | ✅ |
+| Consumer app gates (Portal/ProdDeck/AV) | Point UIs at `/oauth/*` | 🔲 next (app repos) |
+| DEV Postgres aligned with F/G | profile `dev` + `scripts/start-dev.ps1` | ✅ |
 
-**Exit:** Q1 evidence on staging hosts; dependency matrix still cites CSS tag under test.
+**Exit (server):** tests green on `feature/css-next` (`OAuthAuthorizeIT` 6). Consumer cutover + Q1/Q2 promote are separate.
 
 ---
 

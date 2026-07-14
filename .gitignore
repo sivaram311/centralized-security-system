@@ -15,3 +15,9 @@ src/main/resources/keys/private.pem
 
 # Local overrides
 application-local.yml
+.env
+.env.*
+!.env.example
+
+# Agent / IDE
+agents/hires/

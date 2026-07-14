@@ -4,17 +4,30 @@
 
 - Java 21+
 - Maven 3.9+
-- (Optional) PostgreSQL for production
+- **PostgreSQL** on `127.0.0.1:5432` with database `app_css` and role `app_css_dev` (machine DDL already applied — see `E:\MyAgent\workflow\db\`)
+- Secrets: `E:\MyAgent\workflow\db\secrets\postgres.env` (gitignored)
 
-## Run locally
+## Run DEV (Postgres — aligned with PREPROD/PROD)
 
-```bash
-git clone <repo-url>
+```powershell
 cd centralized-security-system
-mvn spring-boot:run
+.\scripts\start-dev.ps1
 ```
 
-Server starts on **http://localhost:9000**.
+This activates Spring profile **`dev`**: port **9000**, schema **`app_css.dev`**, user **`app_css_dev`**.
+
+Manual equivalent:
+
+```powershell
+# after exporting CSS_DB_USER / CSS_DB_PASSWORD / CSS_JDBC_URL
+mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
+```
+
+### Optional H2-only demo (not for machine DEV)
+
+```bash
+mvn spring-boot:run "-Dspring-boot.run.profiles=h2"
+```
 
 ## Verify installation
 
@@ -24,7 +37,7 @@ Server starts on **http://localhost:9000**.
 curl http://localhost:9000/actuator/health
 ```
 
-### 2. Login
+### 2. Password login (legacy API)
 
 ```bash
 curl -s -X POST http://localhost:9000/auth/login \
@@ -32,14 +45,16 @@ curl -s -X POST http://localhost:9000/auth/login \
   -d "{\"username\":\"admin\",\"password\":\"admin123\",\"clientId\":\"grok-dev\"}"
 ```
 
-Save `accessToken` and `refreshToken` from the response.
+### 3. SSO authorize (Phase 2)
 
-### 3. Current user
+Browser / redirect flow:
 
-```bash
-curl http://localhost:9000/auth/me \
-  -H "Authorization: Bearer <accessToken>"
-```
+1. `GET /oauth/authorize?response_type=code&client_id=agent-portal&redirect_uri=http://127.0.0.1:8080/callback&code_challenge=<S256>&code_challenge_method=S256&state=xyz`
+2. Login once at `/oauth/login`
+3. Redirect back with `?code=...`
+4. `POST /oauth/token` with `code` + `code_verifier` → app-scoped tokens
+
+See [sso-and-test-roadmap.md](./sso-and-test-roadmap.md) and [adr/001-sso-mechanism.md](./adr/001-sso-mechanism.md).
 
 ### 4. JWKS
 
@@ -47,64 +62,57 @@ curl http://localhost:9000/auth/me \
 curl http://localhost:9000/.well-known/jwks.json
 ```
 
-### 5. Refresh
+## Profiles
 
-```bash
-curl -s -X POST http://localhost:9000/auth/refresh \
-  -H "Content-Type: application/json" \
-  -d "{\"refreshToken\":\"<refreshToken>\",\"clientId\":\"grok-dev\"}"
-```
+| Profile | DB | Port | Use |
+|---------|----|------|-----|
+| `dev` | Postgres `app_css.dev` | 9000 | Machine DEV (default path) |
+| `preprod` | Postgres `app_css.preprod` | 4900 | F: |
+| `prod` | Postgres `app_css.prod` | 5900 | G: |
+| `test` | H2 mem | random | `mvn test` |
+| `h2` | H2 mem | 9000 | Local demo without Postgres |
 
-## Registered applications (dev seed)
+## Registered applications (seed)
 
 | clientId | Use for |
 |----------|---------|
 | `grok-dev` | Grok Dev trading platform |
 | `agent-platform` | Persistent Agent Platform |
 | `erpnext-bridge` | ERPNext SSO bridge (planned) |
+| `agent-portal` | Agent Portal (+ AgentVerse reuse) |
 
 ## Running tests
-
-From the repo root (main Spring Boot module):
 
 ```bash
 mvn test
 ```
 
-For the Spring Boot starter client library:
+Starter:
 
 ```bash
 cd clients/spring-boot-starter
 mvn test
 ```
 
-Phase 1 auth/JWKS/starter coverage is being added on `feature/css-next`; run the commands above after pulling latest. Full green suite validation is a Lead gate before promote — see [sso-and-test-roadmap.md](./sso-and-test-roadmap.md).
+Tests force profile **`test`** (H2). Suites: `AuthApiIT`, `JwtClaimsAndJwksIT`, `OAuthAuthorizeIT`, context load.
 
 ## Configuration
 
-Edit `src/main/resources/application.yml`:
+Shared defaults: `application.yml`. Env-specific datasource: `application-{dev,preprod,prod,test,h2}.yml`.
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `server.port` | 9000 | HTTP port |
-| `css.issuer` | `http://localhost:9000` | JWT `iss` claim |
-| `css.jwt.access-expiration-ms` | 900000 (15 min) | Access token TTL |
-| `css.jwt.refresh-expiration-days` | 7 | Refresh token TTL |
-| `css.cors.allowed-origin-patterns` | localhost origins | CORS for SPAs |
+| Property | Description |
+|----------|-------------|
+| `server.port` | HTTP port (profile default) |
+| `css.issuer` | JWT `iss` claim |
+| `css.jwt.access-expiration-ms` | Access token TTL |
+| `css.oauth.*` | SSO code TTL, SSO cookie name/secure/SameSite |
+| `css.keys.*` | RS256 PEM paths |
 
 ## Production checklist
 
-- [ ] Switch datasource to PostgreSQL
-- [ ] Set persistent RS256 keys (`css.keys.private-key-path` / `public-key-path`)
-- [ ] Change default seed passwords
-- [ ] Enable HTTPS; update `css.issuer`
-- [ ] Disable H2 console
-- [ ] Restrict CORS origins
-
-See [security-model.md](./security-model.md).
-
-## Next steps
-
-- [Application Integration](./application-integration.md) — connect your app
-- [Migration Guide](./migration-guide.md) — move from embedded auth
-- [API Reference](./api-reference.md) — full endpoint list
+- [x] Postgres for DEV / PREPROD / PROD (schema-per-env)
+- [ ] Persistent RS256 keys on each env drive
+- [ ] Strong seed passwords via env (not defaults)
+- [ ] HTTPS; `css.issuer` = public URL; `CSS_SSO_COOKIE_SECURE=true`
+- [ ] CORS origins for each public app host
+- [ ] Record CSS git tag on every consumer promote (`workflow/deps/`)

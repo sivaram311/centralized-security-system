@@ -22,6 +22,8 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * Integration coverage for the JWKS discovery endpoint and the RS256 claims issued
  * by the login flow. Runs against a random port with the real H2 + DataSeeder setup,
@@ -29,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * rather than any key reconstructed from internals.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class JwtClaimsAndJwksIT {
 
     private static final String CLIENT_ID = "agent-portal";
