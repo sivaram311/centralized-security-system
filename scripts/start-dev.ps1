@@ -22,6 +22,18 @@ Get-Content $secrets | ForEach-Object {
   Set-Item -Path "Env:$k" -Value $v
 }
 
+# Admin seed password SoT — same as F/G classic css .env (do not print)
+foreach ($cssEnvPath in @('G:\apps\css\.env', 'F:\apps\css\.env')) {
+  if (-not (Test-Path $cssEnvPath)) { continue }
+  Get-Content $cssEnvPath | ForEach-Object {
+    if ($_ -match '^\s*CSS_ADMIN_PASSWORD=(.+)$') {
+      $env:CSS_ADMIN_PASSWORD = $Matches[1].Trim().Trim('"')
+      $env:CSS_SEED_ADMIN_PASSWORD = $env:CSS_ADMIN_PASSWORD
+    }
+  }
+  if ($env:CSS_ADMIN_PASSWORD) { break }
+}
+
 $env:CSS_DB_USER = if ($env:CSS_DB_USER) { $env:CSS_DB_USER } else { $env:CSS_ROLE_DEV }
 $env:CSS_DB_PASSWORD = if ($env:CSS_DB_PASSWORD) { $env:CSS_DB_PASSWORD } else { $env:CSS_ROLE_DEV_PASSWORD }
 $env:CSS_JDBC_URL = if ($env:CSS_JDBC_URL) {
