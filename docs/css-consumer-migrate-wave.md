@@ -1,54 +1,44 @@
 # CSS consumer migrate wave — 2026-07-15
 
 **Session:** `css-api-migrate-wave-2026-07-15`  
-**Prove gate:** [css-api-prove-working.md](./css-api-prove-working.md) · `H:\releases\css-next-0.2.0\evidence\api-prove\`
+**Status:** **COMPLETE** (css-next consumer wave + classic-align leftovers)  
+**Prove gate:** [css-api-prove-working.md](./css-api-prove-working.md) · packs `H:\releases\css-next-0.2.0\evidence\api-prove\` · brand `H:\releases\css-next-0.2.1\evidence\idp-brand\`  
+**Machine SoT:** [`E:\MyAgent\workflow\css\MIGRATE-PENDING.md`](E:/MyAgent/workflow/css/MIGRATE-PENDING.md)
 
-## Prove context
+## Live pins (post-wave)
 
-| Surface | Verdict |
-|---------|---------|
-| Classic / css-next JWKS + css-next OAuth authorize→login | **Green** |
-| CSS DEV `:9000` | **Down** at prove — hold localhost password labels until Postgres DEV up |
-| Fleet split | classic ≠ css-next |
+| App | Version | IdP | Mode | Notes |
+|-----|---------|-----|------|-------|
+| css-next | **0.2.1** / `v0.2.1` | — | OAuth + password | Minimal Delena `/oauth/login` brand |
+| ProdDeck | **0.8.4** / `v0.8.4` | css-next | hybrid | home / home-staging / home-dev |
+| Agent Portal | **0.1.9** | css-next | password | nginx `/auth` → `:5910` |
+| AgentVerse-upgrade | **0.3.8** | css-next | password | shared `clientId=agent-portal` |
+| Trading Portal | **0.1.0** + tip `cf5176d` | **classic** | JWKS | F `:4900` / G `:5900` by design |
 
-## 1. IN THIS WAVE (proposed — await EM GO)
+## Wave history
 
-| # | App | clientId | IdP target | Why |
-|---|-----|----------|------------|-----|
-| 1 | **ProdDeck** DEV `:3320` | `proddeck` | **css-next** | OAuth SSO pilot; contract [proddeck-css-next-oauth-pilot.md](./proddeck-css-next-oauth-pilot.md) |
-| 2 | **Agent Portal** DEV | `agent-portal` | **css-next** | Next active consumer; password→classic today |
-| 3 | **AgentVerse** DEV | `agent-portal` *(reuse)* | **css-next** | After Portal contract — shared clientId |
+1. Prove green (JWKS + OAuth authorize).
+2. ProdDeck css-next pilot → briefly 0.8.2 F/G → rolled back to classic 0.8.3 → retry **0.8.4** hybrid.
+3. Classic-align: Trading Portal F → classic `:4900`; CSS DEV `:9000` up.
+4. css-next consumer wave: IdP brand 0.2.1 → Portal + AV-upgrade + ProdDeck on css-next; domain logins PASS.
 
-**Wave rule:** DEV `:3xxx` only. No F/G issuer flip. No classic↔next merge. Matrix after promote only.
-
-**EM GO (2026-07-15):** proceed with **ProdDeck-only** css-next OAuth DEV pilot (inventory safer cut). Portal / AgentVerse deferred.
-
-## 2. OUT OF WAVE
+## OUT OF WAVE (unchanged)
 
 | Item | Reason |
 |------|--------|
 | h-drive-server, stack-pilot | waived-public-read |
-| Library | no auth yet |
-| agent-platform, grok-dev, erpnext-bridge | deferred / planned |
-| agentverse-upgrade F/G | Dispatch SoT — separate fleet; not issuer flip this wave |
-| F/G cutover / matrix | Phase 6 EM GO |
+| Library / grok-dev / erpnext-bridge | deferred |
+| Classic densify `agentverse` | rollback-only; not Dispatch SoT |
+| Portal Angular OAuth/PKCE | optional future (`mig-portal-oauth`) |
 
-## 3. Risks
+## Risks (remaining)
 
-1. Shared `agent-portal` clientId (Portal + AV + upgrade)
-2. DEV `:9000` down for password/JWKS-local smoke
-3. PROD `admin`/`admin123` → 401 expected (env seed)
-4. Accidental classic↔next mix on F/G
+1. Shared `agent-portal` clientId (Portal + AV + upgrade) — intentional; move lockstep.
+2. classic ≠ css-next JWKS/issuer — do not half-flip.
+3. PROD password is env `CSS_ADMIN_PASSWORD` (not README `admin123`).
 
-## 5. PENDING tracker (machine SoT)
+## CLOSED tracker IDs
 
-Keep status in MyAgent: [`E:\MyAgent\workflow\css\MIGRATE-PENDING.md`](E:/MyAgent/workflow/css/MIGRATE-PENDING.md)
+`mig-tp-push` · `mig-idp-brand` · `mig-pd-css-next-retry` · `mig-portal` · `mig-av` · `mig-css-dev9000` (and earlier pd merge/phase6 work)
 
-| ID | Pending |
-|----|---------|
-| `mig-portal` | Agent Portal DEV → css-next |
-| `mig-av` | AgentVerse DEV → css-next (after Portal) |
-| `mig-css-dev9000` | CSS DEV `:9000` Postgres |
-| `mig-pd-merge-tag` | ProdDeck merge + tag/pack |
-| `mig-phase6` | F/G cutover + matrix (EM GO) |
-| `mig-idp-brand` | Optional branded css-next login page — **shipped minimal** in css-next `0.2.1` (`OAuthController.renderLoginPage`: Delena wordmark, accent, client_id label, clearer errors). Prove: `https://css-next.delena.buzz/oauth/login` |
+Optional later: `mig-portal-oauth`.

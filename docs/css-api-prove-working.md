@@ -8,9 +8,9 @@
 
 | App id | Public host | Local port | Role |
 |--------|-------------|------------|------|
-| `css` (classic) | https://css.delena.buzz | `:5900` | Live issuer for existing password/JWT consumers · tag `v0.1.0` |
-| `css-next` | https://css-next.delena.buzz | `:5910` | Side fleet OAuth SSO · tag `v0.2.0` |
-| CSS DEV | `http://127.0.0.1:9000` | `:9000` | Postgres DEV — **was down** during this prove |
+| `css` (classic) | https://css.delena.buzz | `:5900` | Classic IdP · tag `v0.1.0` · trading-portal F/G still pin here |
+| `css-next` | https://css-next.delena.buzz | `:5910` | Side fleet · live **`v0.2.1`** (branded `/oauth/login`); prove evidence from `v0.2.0` still valid |
+| CSS DEV | `http://127.0.0.1:9000` | `:9000` | Postgres DEV — **up** after classic-align (`mig-css-dev9000`) |
 
 Do **not** merge next into classic identity.
 
@@ -40,4 +40,4 @@ Do **not** merge next into classic identity.
 2. Use css-next **OAuth authorize → login → token** for SSO pilots (start with ProdDeck DEV).
 3. Keep `clientId` values from MyAgent [`CLIENT-REGISTRY.md`](E:/MyAgent/workflow/css/CLIENT-REGISTRY.md).
 
-**Next:** consumer migrate wave doc + per-app DEV work (see MyAgent `workflow/css/` + migrate-wave checklist). Password login smoke on DEV requires bringing `:9000` up with Postgres — do that before labeling DEV password path “green.”
+**Next:** Consumer wave **complete** — see `MIGRATE-PENDING.md` / `CSS-NEXT-CONSUMER-WAVE.md`. Optional later: Portal Angular OAuth/PKCE.

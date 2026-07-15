@@ -1,9 +1,11 @@
 # ProdDeck DEV ↔ css-next OAuth — Integration Spec
 
-**Status:** Implemented on ProdDeck `feature/css-next-oauth-pilot` (DEV `.env.local` oauth flag) — F/G unchanged  
+**Status:** **SUPERSEDED by live ProdDeck 0.8.4** (css-next hybrid on DEV/F/G). Kept as historical contract for PKCE/OAuth lanes.  
 **Audience:** App implementers (ProdDeck), CSS maintainers, EM/QA  
-**Date:** 2026-07-15  
-**Goal:** Pilot **ProdDeck DEV** (`:3320`) against **css-next** OAuth SSO without touching classic CSS or F/G ProdDeck bakes until the pilot is green.
+**Date:** 2026-07-15 (pilot); live cutover same day → `v0.8.4`  
+**Goal (original):** Pilot **ProdDeck DEV** (`:3320`) against **css-next** OAuth SSO without touching classic CSS or F/G ProdDeck bakes until the pilot is green.
+
+**Live SoT:** ProdDeck pack `H:\releases\proddeck-0.8.4` · IdP css-next `v0.2.1` · mode `hybrid` · tracker `MIGRATE-PENDING.md` (wave complete).
 
 Related:
 
