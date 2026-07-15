@@ -35,6 +35,7 @@ public class DataSeeder {
             RegisteredApplication agentPlatform = seedApp(appRepo, "agent-platform", "Persistent Agent Platform");
             RegisteredApplication erpnextBridge = seedApp(appRepo, "erpnext-bridge", "ERPNext SSO Bridge");
             RegisteredApplication agentPortal = seedApp(appRepo, "agent-portal", "Agent Portal");
+            RegisteredApplication tradingPortal = seedApp(appRepo, "trading-portal", "Trading Portal (XAUUSD ICT+Gann)");
 
             if (userRepo.findByUsername("admin").isEmpty()) {
                 UserAccount admin = new UserAccount();
@@ -49,12 +50,16 @@ public class DataSeeder {
                 admin.getApplicationRoles().add(role(admin, erpnextBridge, "ROLE_SYSTEM_MANAGER"));
                 admin.getApplicationRoles().add(role(admin, agentPortal, "ROLE_ADMIN"));
                 admin.getApplicationRoles().add(role(admin, agentPortal, "ROLE_USER"));
+                admin.getApplicationRoles().add(role(admin, tradingPortal, "ROLE_ADMIN"));
+                admin.getApplicationRoles().add(role(admin, tradingPortal, "ROLE_USER"));
 
                 userRepo.save(admin);
                 log.info("Seeded admin user with roles across all applications (password from css.seed.admin-password)");
             } else {
                 ensureRole(userRepo, "admin", agentPortal, "ROLE_ADMIN");
                 ensureRole(userRepo, "admin", agentPortal, "ROLE_USER");
+                ensureRole(userRepo, "admin", tradingPortal, "ROLE_ADMIN");
+                ensureRole(userRepo, "admin", tradingPortal, "ROLE_USER");
             }
 
             if (userRepo.findByUsername("demo").isEmpty()) {
@@ -65,10 +70,12 @@ public class DataSeeder {
                 demo.setEnabled(true);
                 demo.getApplicationRoles().add(role(demo, grokDev, "ROLE_USER"));
                 demo.getApplicationRoles().add(role(demo, agentPortal, "ROLE_USER"));
+                demo.getApplicationRoles().add(role(demo, tradingPortal, "ROLE_USER"));
                 userRepo.save(demo);
-                log.info("Seeded demo user for grok-dev and agent-portal (password from css.seed.demo-password)");
+                log.info("Seeded demo user for grok-dev, agent-portal, trading-portal (password from css.seed.demo-password)");
             } else {
                 ensureRole(userRepo, "demo", agentPortal, "ROLE_USER");
+                ensureRole(userRepo, "demo", tradingPortal, "ROLE_USER");
             }
         };
     }
