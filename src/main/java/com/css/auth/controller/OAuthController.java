@@ -198,23 +198,33 @@ public class OAuthController {
     private String renderLoginPage(String clientId, String redirectUri, String codeChallenge,
                                     String codeChallengeMethod, String state, String error) {
         String errorBlock = (error != null && !error.isBlank())
-                ? "<p style=\"color:#b00020;margin:0 0 12px;\">Invalid username or password.</p>"
+                ? "<p class=\"err\">Sign-in failed. Check username and password, then try again.</p>"
+                : "";
+        String clientLabel = (clientId != null && !clientId.isBlank())
+                ? "<p class=\"sub\">Signing in to <strong>" + escapeHtml(clientId) + "</strong></p>"
                 : "";
         return "<!DOCTYPE html>"
                 + "<html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-                + "<title>Sign in - CSS</title>"
+                + "<title>Sign in — Delena CSS</title>"
                 + "<style>"
-                + "body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:360px;margin:80px auto;padding:0 16px;color:#222;}"
-                + "h2{margin-bottom:24px;}"
-                + "input{width:100%;padding:10px;margin:6px 0;box-sizing:border-box;border:1px solid #ccc;border-radius:4px;font-size:14px;}"
-                + "button{width:100%;padding:10px;margin-top:12px;background:#1a73e8;color:#fff;border:none;border-radius:4px;font-size:15px;cursor:pointer;}"
-                + "button:hover{background:#1558b0;}"
+                + ":root{--accent:#0b6e4f;--ink:#14231c;--muted:#5a6b62;--line:#d5e0da;--bg:#f3f7f5;}"
+                + "body{font-family:\"Segoe UI\",system-ui,sans-serif;max-width:380px;margin:72px auto;padding:0 16px;color:var(--ink);background:linear-gradient(165deg,#e8f2ed 0%,var(--bg) 45%,#fff 100%);min-height:100vh;box-sizing:border-box;}"
+                + ".brand{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 8px;}"
+                + "h1{font-size:22px;margin:0 0 8px;font-weight:650;}"
+                + ".sub{margin:0 0 20px;color:var(--muted);font-size:14px;}"
+                + ".err{color:#9b1c1c;background:#fdebec;border:1px solid #f2c4c4;border-radius:6px;padding:10px 12px;margin:0 0 14px;font-size:14px;}"
+                + "input{width:100%;padding:11px 12px;margin:6px 0;box-sizing:border-box;border:1px solid var(--line);border-radius:6px;font-size:14px;background:#fff;}"
+                + "input:focus{outline:2px solid rgba(11,110,79,.35);border-color:var(--accent);}"
+                + "button{width:100%;padding:11px;margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;}"
+                + "button:hover{background:#095a41;}"
                 + "</style></head><body>"
-                + "<h2>Sign in</h2>"
+                + "<p class=\"brand\">Delena CSS</p>"
+                + "<h1>Sign in</h1>"
+                + clientLabel
                 + errorBlock
                 + "<form method=\"post\" action=\"/oauth/login\">"
-                + "<input type=\"text\" name=\"username\" placeholder=\"Username\" required autofocus>"
-                + "<input type=\"password\" name=\"password\" placeholder=\"Password\" required>"
+                + "<input type=\"text\" name=\"username\" placeholder=\"Username\" required autofocus autocomplete=\"username\">"
+                + "<input type=\"password\" name=\"password\" placeholder=\"Password\" required autocomplete=\"current-password\">"
                 + "<input type=\"hidden\" name=\"client_id\" value=\"" + escapeHtml(clientId) + "\">"
                 + "<input type=\"hidden\" name=\"redirect_uri\" value=\"" + escapeHtml(redirectUri) + "\">"
                 + "<input type=\"hidden\" name=\"code_challenge\" value=\"" + escapeHtml(codeChallenge) + "\">"

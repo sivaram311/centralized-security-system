@@ -51,4 +51,4 @@ Keep status in MyAgent: [`E:\MyAgent\workflow\css\MIGRATE-PENDING.md`](E:/MyAgen
 | `mig-css-dev9000` | CSS DEV `:9000` Postgres |
 | `mig-pd-merge-tag` | ProdDeck merge + tag/pack |
 | `mig-phase6` | F/G cutover + matrix (EM GO) |
-| `mig-idp-brand` | Optional branded css-next login page |
+| `mig-idp-brand` | Optional branded css-next login page — **shipped minimal** in css-next `0.2.1` (`OAuthController.renderLoginPage`: Delena wordmark, accent, client_id label, clearer errors). Prove: `https://css-next.delena.buzz/oauth/login` |
