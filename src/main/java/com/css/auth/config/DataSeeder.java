@@ -36,6 +36,7 @@ public class DataSeeder {
             RegisteredApplication erpnextBridge = seedApp(appRepo, "erpnext-bridge", "ERPNext SSO Bridge");
             RegisteredApplication agentPortal = seedApp(appRepo, "agent-portal", "Agent Portal");
             RegisteredApplication tradingPortal = seedApp(appRepo, "trading-portal", "Trading Portal (XAUUSD ICT+Gann)");
+            RegisteredApplication machineSentinel = seedApp(appRepo, "machine-sentinel", "Machine Sentinel");
 
             if (userRepo.findByUsername("admin").isEmpty()) {
                 UserAccount admin = new UserAccount();
@@ -52,6 +53,8 @@ public class DataSeeder {
                 admin.getApplicationRoles().add(role(admin, agentPortal, "ROLE_USER"));
                 admin.getApplicationRoles().add(role(admin, tradingPortal, "ROLE_ADMIN"));
                 admin.getApplicationRoles().add(role(admin, tradingPortal, "ROLE_USER"));
+                admin.getApplicationRoles().add(role(admin, machineSentinel, "ROLE_ADMIN"));
+                admin.getApplicationRoles().add(role(admin, machineSentinel, "ROLE_USER"));
 
                 userRepo.save(admin);
                 log.info("Seeded admin user with roles across all applications (password from css.seed.admin-password)");
@@ -60,6 +63,8 @@ public class DataSeeder {
                 ensureRole(userRepo, "admin", agentPortal, "ROLE_USER");
                 ensureRole(userRepo, "admin", tradingPortal, "ROLE_ADMIN");
                 ensureRole(userRepo, "admin", tradingPortal, "ROLE_USER");
+                ensureRole(userRepo, "admin", machineSentinel, "ROLE_ADMIN");
+                ensureRole(userRepo, "admin", machineSentinel, "ROLE_USER");
             }
 
             if (userRepo.findByUsername("demo").isEmpty()) {
@@ -71,11 +76,13 @@ public class DataSeeder {
                 demo.getApplicationRoles().add(role(demo, grokDev, "ROLE_USER"));
                 demo.getApplicationRoles().add(role(demo, agentPortal, "ROLE_USER"));
                 demo.getApplicationRoles().add(role(demo, tradingPortal, "ROLE_USER"));
+                demo.getApplicationRoles().add(role(demo, machineSentinel, "ROLE_USER"));
                 userRepo.save(demo);
-                log.info("Seeded demo user for grok-dev, agent-portal, trading-portal (password from css.seed.demo-password)");
+                log.info("Seeded demo user for grok-dev, agent-portal, trading-portal, machine-sentinel (password from css.seed.demo-password)");
             } else {
                 ensureRole(userRepo, "demo", agentPortal, "ROLE_USER");
                 ensureRole(userRepo, "demo", tradingPortal, "ROLE_USER");
+                ensureRole(userRepo, "demo", machineSentinel, "ROLE_USER");
             }
         };
     }
@@ -100,6 +107,9 @@ public class DataSeeder {
             app.setClientId(clientId);
             app.setDisplayName(name);
             app.setEnabled(true);
+            if ("machine-sentinel".equals(clientId)) {
+                app.setRedirectUris("http://127.0.0.1:3351/**,http://localhost:3351/**");
+            }
             return repo.save(app);
         });
     }
