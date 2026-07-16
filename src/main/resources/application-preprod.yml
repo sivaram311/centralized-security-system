@@ -10,6 +10,12 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${CSS_DB_USER:app_css_preprod}
     password: ${CSS_DB_PASSWORD:}
+    # Shared PG :5432 — INCIDENT 2026-07-16 (PROPOSAL pool-caps, Grok PROCEED)
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 30000
+      keepalive-time: 30000
   jpa:
     hibernate:
       ddl-auto: update
