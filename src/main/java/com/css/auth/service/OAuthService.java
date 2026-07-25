@@ -75,6 +75,12 @@ public class OAuthService {
                         || host.equalsIgnoreCase("delena.buzz")
                         || host.toLowerCase().endsWith(".delena.buzz");
             }
+            // Native Android app custom-scheme redirect (Agent Portal Extended,
+            // AppAuth-Android). Exact scheme+host match only -- do not widen
+            // this to arbitrary custom schemes.
+            if ("buzz.delena.agentportal".equalsIgnoreCase(scheme)) {
+                return "oauth".equalsIgnoreCase(host);
+            }
             return false;
         } catch (Exception ex) {
             return false;
