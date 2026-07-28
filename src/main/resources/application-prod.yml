@@ -28,7 +28,7 @@ spring:
       enabled: false
 
 css:
-  issuer: ${CSS_ISSUER:https://css.delena.buzz}
+  issuer: ${CSS_ISSUER:https://css-next.delena.buzz}
   cors:
     allowed-origin-patterns: ${CSS_CORS_ORIGINS:https://css.delena.buzz,https://*.delena.buzz,http://127.0.0.1:*,http://localhost:*}
   seed:
@@ -38,8 +38,8 @@ css:
   oauth:
     cookie-secure: ${CSS_SSO_COOKIE_SECURE:true}
   keys:
-    private-key-path: ${CSS_PRIVATE_KEY:file:G:/apps/css/keys/private.pem}
-    public-key-path: ${CSS_PUBLIC_KEY:file:G:/apps/css/keys/public.pem}
+    private-key-path: ${CSS_PRIVATE_KEY:file:G:/apps/css-next/keys/private.pem}
+    public-key-path: ${CSS_PUBLIC_KEY:file:G:/apps/css-next/keys/public.pem}
 
 management:
   endpoints:

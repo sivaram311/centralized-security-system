@@ -28,9 +28,9 @@ spring:
       enabled: false
 
 css:
-  issuer: ${CSS_ISSUER:http://127.0.0.1:4900}
+  issuer: ${CSS_ISSUER:https://css-next-staging.delena.buzz}
   cors:
-    allowed-origin-patterns: ${CSS_CORS_ORIGINS:http://127.0.0.1:*,http://localhost:*,https://*-staging.delena.buzz,https://css-staging.delena.buzz}
+    allowed-origin-patterns: ${CSS_CORS_ORIGINS:http://127.0.0.1:*,http://localhost:*,https://*-staging.delena.buzz,https://css-next-staging.delena.buzz,https://css-next.delena.buzz}
   seed:
     enabled: ${CSS_SEED_ENABLED:true}
     admin-password: ${CSS_ADMIN_PASSWORD:admin123}
@@ -38,8 +38,8 @@ css:
   oauth:
     cookie-secure: ${CSS_SSO_COOKIE_SECURE:false}
   keys:
-    private-key-path: ${CSS_PRIVATE_KEY:file:F:/apps/css/keys/private.pem}
-    public-key-path: ${CSS_PUBLIC_KEY:file:F:/apps/css/keys/public.pem}
+    private-key-path: ${CSS_PRIVATE_KEY:file:F:/apps/css-next/keys/private.pem}
+    public-key-path: ${CSS_PUBLIC_KEY:file:F:/apps/css-next/keys/public.pem}
 
 management:
   endpoints:
