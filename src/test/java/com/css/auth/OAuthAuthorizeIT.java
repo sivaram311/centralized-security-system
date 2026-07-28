@@ -36,6 +36,7 @@ class OAuthAuthorizeIT {
 
     private static final String CLIENT_ID = "agent-portal";
     private static final String REDIRECT_URI = "http://localhost:5555/callback";
+    private static final String ANDROID_REDIRECT_URI = "buzz.delena.agentportal://oauth/callback";
 
     @Autowired
     private MockMvc mockMvc;
@@ -183,6 +184,20 @@ class OAuthAuthorizeIT {
                         .param("code_challenge", challenge)
                         .param("code_challenge_method", "S256"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void authorizeAcceptsNativeAndroidCallbackRedirect() throws Exception {
+        String challenge = challengeFor(generateVerifier());
+
+        mockMvc.perform(get("/oauth/authorize")
+                        .param("response_type", "code")
+                        .param("client_id", CLIENT_ID)
+                        .param("redirect_uri", ANDROID_REDIRECT_URI)
+                        .param("code_challenge", challenge)
+                        .param("code_challenge_method", "S256"))
+                .andExpect(status().isFound())
+                .andExpect(header().string("Location", startsWith("/oauth/login")));
     }
 
     private String loginAndGetLocation(String verifier, String challenge, String state) throws Exception {

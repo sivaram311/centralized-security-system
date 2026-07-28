@@ -211,7 +211,7 @@ Refresh body (existing):
 { "refreshToken": "...", "clientId": "proddeck" }
 ```
 
-### 5.5 Redirect URI allow-list (css-next v0.2.0)
+### 5.5 Redirect URI allow-list (css-next v0.2.0+)
 
 Implemented in `OAuthService.isRedirectUriAllowed`:
 
@@ -219,6 +219,7 @@ Implemented in `OAuthService.isRedirectUriAllowed`:
 |--------|------|----------|
 | `http` | `localhost` or `127.0.0.1` | Yes (any path/port) |
 | `https` | `localhost`, `delena.buzz`, `*.delena.buzz` | Yes |
+| `buzz.delena.agentportal` | `oauth` | Yes (native Android Agent Portal Extended callback) |
 | other | — | No |
 
 Pilot URI:
@@ -228,6 +229,12 @@ http://127.0.0.1:3320/auth/callback
 ```
 
 Also valid: `http://localhost:3320/auth/callback` — pick **one** and use it consistently in authorize + token exchange (exact string match on stored code).
+
+Native app callback:
+
+```text
+buzz.delena.agentportal://oauth/callback
+```
 
 ### 5.6 Prerequisites on IdP
 
